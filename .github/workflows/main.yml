@@ -17,5 +17,9 @@ jobs:
         with:
           python-version: '3.x'  # Specify the Python version you need
 
+      - name: Install required Python modules
+        run: |
+          pip install gspread oauth2client pandas openpyxl beautifulsoup4 msedge-selenium-tools selenium requests
+
       - name: Run Main Function
         run: python main.py
