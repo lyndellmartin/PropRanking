@@ -1,0 +1,21 @@
+name: Run Twice a Day
+
+on:
+  schedule:
+    - cron: '0 7,12 * * *' # Runs at 07:00 and 12:00 (UTC)
+
+jobs:
+  Update-Excell:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2  # This step checks out your repository
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'  # Specify the Python version you need
+
+      - name: Run Main Function
+        run: python main.py
