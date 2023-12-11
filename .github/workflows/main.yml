@@ -1,8 +1,7 @@
-name: Run Twice a Day
+name: Run on Command
 
 on:
-  schedule:
-    - cron: '54 23 * * *' # Runs at 23:03 (UTC)
+  workflow_dispatch:
 
 jobs:
   Update-Excell:
