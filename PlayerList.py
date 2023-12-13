@@ -2,9 +2,8 @@ import pandas as pd
 import openpyxl
 
 class Player:
-    def __init__(self, name, position, stat, projection, sport, dataframe=None):
+    def __init__(self, name, stat, projection, sport, dataframe=None):
         self.name = name
-        self.position = position
         self.stat = stat
         self.projection = projection
         self.sport = sport
@@ -81,7 +80,6 @@ class PlayerList:
 
         # Initialize lists for each attribute
         names = []
-        positions = []
         stats = []
         projections = []
         sports = []
@@ -92,7 +90,6 @@ class PlayerList:
         # Extract data from Player objects
         for player in self.players:
             names.append(player.name)
-            positions.append(player.position)
             stats.append(', '.join(str(stat) for stat in player.stat))
             projections.append(player.projection)
             sports.append(player.sport)
@@ -101,12 +98,12 @@ class PlayerList:
             attempts.append(player.attempts)
 
         # Prepare the transposed data
-        data_transposed = [names, positions, stats, projections, sports, hit_rates, hits, attempts]
+        data_transposed = [names, stats, projections, sports, hit_rates, hits, attempts]
 
         # Transpose the data to organize it by columns
         data_transposed = list(map(list, zip(*data_transposed)))
 
-        header_list = ["Name", "Position", "Stat", "Projection", "Sport", "Hit Rate", "Hits", "Attempts"]
+        header_list = ["Name", "Stat", "Projection", "Sport", "Hit Rate", "Hits", "Attempts"]
         worksheet.update('A1', [header_list])
 
         # Update the worksheet with the transposed data starting from cell A1

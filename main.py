@@ -24,9 +24,9 @@ if __name__ == "__main__":
     nbaHitRateSheet = spreadsheet.worksheet('NBAHitRate')
 
     nbaList = PlayerList()
-    nbaList = populateBets(nbaList, "nba", "points")
-    nbaList = populateBets(nbaList, "nba", "assists")
-    nbaList = populateBets(nbaList, "nba", "rebounds")
+    nbaList = populateBets(nbaList, "nba", "player_points_over_under")
+    nbaList = populateBets(nbaList, "nba", "player_assists_over_under")
+    nbaList = populateBets(nbaList, "nba", "player_rebounds_over_under")
 
     nbaList = scrapeGamelog(nbaList)
     nbaList = calcHitRate(nbaList)
