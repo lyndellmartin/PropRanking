@@ -1,7 +1,13 @@
-name: Run on Command
+name: Twice Per Day
 
 on:
-  workflow_dispatch:
+  # At 07:00 and 12:00 every day, Pacific Time (PST/PDT)
+    # Note: GitHub Actions uses UTC time
+    # PST (Winter): UTC - 8 hours
+    # PDT (Summer): UTC - 7 hours
+    # In December, PST is applicable, so UTC - 8 hours
+    schedule:
+      - cron: '0 15,20 * * *' # 07:00 and 12:00 PST (15:00 and 20:00 UTC)
 
 jobs:
   Update-Excell:
