@@ -16,7 +16,7 @@ def updateNBA(): #takes around 120 requests but fully updates everything needed
     credentials = ServiceAccountCredentials.from_json_keyfile_name(credentials_file_path, scope)
     client = gspread.authorize(credentials)
 
-    spreadsheet_id = '1XDDtz18NOIjRXUS3mYUNoGqp-2_wZt032NOXVj2LBPk'
+    spreadsheet_id = '1na9sjEtjP3Oltvhwha-WtBT-f5xSDhC47kcMblB0Lvo'
     spreadsheet = client.open_by_key(spreadsheet_id)
 
     nbaHitRateSheet = spreadsheet.worksheet('NBAHitRate')
