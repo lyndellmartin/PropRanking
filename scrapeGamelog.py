@@ -93,7 +93,8 @@ def calcHitRate(playerList):
         "Reb" : "REB",
         "Stl" : "STL",
         "Blk" : "BLK",
-        "3pts" : "3PM",
+        "3PM" : "3PM",
+        "TO" : "TO",
         #football mapping
         "Pass TDs": "TD"
     }
