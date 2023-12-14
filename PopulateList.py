@@ -33,7 +33,6 @@ def get_fantasy_snapshot(league, market):
     url = BASE_URL + '/v1/fantasy_snapshot/' + league + '/' + market + '?' + params
     return get_request(url)
 
-
     
 #import playerList with all the bets from the given sport and stat inputted
 def populateBets(playerList, sport, stat):
@@ -41,13 +40,22 @@ def populateBets(playerList, sport, stat):
     response = get_fantasy_snapshot(sport, stat)
 
     statMap = {
+        #basketball
         'player_points_over_under' : ['Pts'],
         'player_assists_over_under' : ['Ast'],
         'player_assists_points_over_under' : ['Pts', 'Ast'],
         'player_rebounds_over_under' : ['Reb'],
         'player_points_rebounds_over_under' : ['Pts', 'Reb'],
+        'player_assists_points_rebounds_over_under' : ['Pts', 'Ast', 'Reb'],
+        'player_assists_rebounds_over_under' : ['Ast', 'Reb'],
+        'player_blocks_steals_over_under' : ['Blk', 'Stl'],
+        'player_blocks_over_under' : ['Blk'],
+        'player_steals_over_under' : ['Stl'],
+        'player_threes_over_under' : ['3PM'],
+        'player_turnovers_over_under' : ['TO']
     }
 
+    count = 0
     # Loop through each bookmaker
     for book in response['fantasy_books']:
         # Check if the bookmaker is PrizePicks
@@ -58,5 +66,6 @@ def populateBets(playerList, sport, stat):
                 projection = line['line']
                 player = Player(name, statMap[stat], float(projection), sport)
                 playerList.add_player(player)
-
+                count += 1
+    print(f'{stat} : {count}')
     return playerList
