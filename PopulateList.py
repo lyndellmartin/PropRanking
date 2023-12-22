@@ -6,7 +6,7 @@ import time
 import math
 
 BASE_URL = 'https://api.prop-odds.com'
-API_KEY = 'NLBqtsuNK9uS9gpboWnB1z6c84Vwk0HIqpLcfmw4'
+API_KEY = '6dvBiRWWH6aBNjkeG8W89ir3KeihIeyY'
 
 def get_request(url):
     response = requests.get(url)
@@ -27,7 +27,7 @@ def get_usage():
 def get_fantasy_snapshot(league, market):
     query_params = {
         'api_key': API_KEY,
-        'active_only': False
+        'active_only': True
     }
     params = urllib.parse.urlencode(query_params)
     url = BASE_URL + '/v1/fantasy_snapshot/' + league + '/' + market + '?' + params

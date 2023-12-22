@@ -11,6 +11,8 @@ def scrapeGamelog(playerList):
 
     pattern = re.compile('[^a-zA-Z ]')
     for player in playerList.players:
+        if player.name == "Jarrett Allen":
+            print("here")
 
         #prepare URL
         names = player.name.split()
@@ -100,6 +102,8 @@ def calcHitRate(playerList):
     }
 
     for player in playerList.players:
+        if player.name == "Jarrett Allen":
+            print("here")
 
         #replace stat names from bettingpros with stat names from pro-football reference
         mapped_stats = []
