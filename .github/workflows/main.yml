@@ -8,6 +8,7 @@ on:
     # In December, PST is applicable, so UTC - 8 hours
     schedule:
       - cron: '0 15,20 * * *' # 07:00 and 12:00 PST (15:00 and 20:00 UTC)
+    workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
   Update-Excell:
@@ -26,5 +27,7 @@ jobs:
         run: |
           pip install gspread oauth2client pandas openpyxl beautifulsoup4 lxml
 
-      - name: Run Main Function
-        run: python main.py
+      - name: Run Main Function in BackEnd directory
+        run: |
+          cd BackEnd
+          python main.py
