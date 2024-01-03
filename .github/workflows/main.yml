@@ -30,4 +30,4 @@ jobs:
       - name: Run Main Function in BackEnd directory
         run: |
           cd BackEnd
-          python main.py
+          python updateList.py
