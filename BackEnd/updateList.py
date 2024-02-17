@@ -1,4 +1,4 @@
-from PlayerList import PlayerList, Player
+from PlayerList import PlayerList, Player, hitRateList, hitRate
 from PopulateList import populateBets
 from scrapeGamelog import scrapeGamelog
 from scrapeGamelog import calcHitRate
@@ -21,10 +21,11 @@ def openSpreadsheet():
 
     return spreadsheet
 
-def updateNBA(): #120 requests
+
+def updateBaseNBA(): #120 requests
 
     spreadsheet = openSpreadsheet()
-    nbaHitRateSheet = spreadsheet.worksheet('NBAHitRate')
+    nbaHitRateSheet = spreadsheet.worksheet('BaseNBA')
 
     nbaList = PlayerList()
     nbaList = populateBets(nbaList, "nba", "player_points_over_under")
@@ -40,17 +41,13 @@ def updateNBA(): #120 requests
     nbaList = populateBets(nbaList, "nba", "player_threes_over_under")
     nbaList = populateBets(nbaList, "nba", "player_turnovers_over_under")
 
-    nbaList = scrapeGamelog(nbaList)
-    nbaList = calcHitRate(nbaList)
-    nbaList.sort_by_hit_percentage()
-    
     nbaList.print_to_excel(nbaHitRateSheet)
 
 
-def updateNHL(): #50 requests
+def updateBaseNHL(): #50 requests
 
     spreadsheet = openSpreadsheet()
-    nhlHitRateSheet = spreadsheet.worksheet('NHLHitRate')
+    nhlSheet = spreadsheet.worksheet('BaseNHL')
 
     nhlList = PlayerList()
     nhlList = populateBets(nhlList, "nhl", "player_points_over_under")
@@ -59,42 +56,53 @@ def updateNHL(): #50 requests
     nhlList = populateBets(nhlList, "nhl", "goalie_goals_over_under")
     nhlList = populateBets(nhlList, "nhl", "goalie_saves_over_under")
 
+    nhlList.print_to_excel(nhlSheet)
+
+#read from base and calculate hit rates
+def hitRateNHL():
+
+    nhlList = hitRateList() #begin instance of class
+    spreadsheet = openSpreadsheet() #open the spreadsheeet
+
+    #open sheet to read from
+    baseSheet = spreadsheet.worksheet('BaseNHL')
+    nhlList.loadBase(baseSheet)
+
     nhlList = scrapeGamelog(nhlList)
     nhlList = calcHitRate(nhlList)
     nhlList.sort_by_hit_percentage()
-    
-    nhlList.print_to_excel(nhlHitRateSheet)
 
-#Needs troubleshooting, but not in season
-def updateNFL(): #130 requests
+    nhlList.delete_zeros()
 
-    spreadsheet = openSpreadsheet()
-    nflHitRateSheet = spreadsheet.worksheet('NFLHitRate')
+    #Open and print to sheet
+    nhlSheet = spreadsheet.worksheet('NHLHitRate')
+    nhlList.print_to_excel(nhlSheet)
 
-    nflList = PlayerList()
-    #nflList = populateBets(nflList, "nfl", "player_td_over_under")
-    nflList = populateBets(nflList, "nfl", "player_assisted_tackles_over_under")
-    nflList = populateBets(nflList, "nfl", "player_field_goals_over_under")
-    nflList = populateBets(nflList, "nfl", "player_passing_attempts_over_under")
-    nflList = populateBets(nflList, "nfl", "player_passing_tds_over_under")
-    nflList = populateBets(nflList, "nfl", "player_passing_yds_over_under")
-    nflList = populateBets(nflList, "nfl", "player_receptions_over_under")
-    nflList = populateBets(nflList, "nfl", "player_receiving_yds_over_under")
-    nflList = populateBets(nflList, "nfl", "player_rushing_attempts_over_under")
-    nflList = populateBets(nflList, "nfl", "player_rushing_yds_over_under")
-    nflList = populateBets(nflList, "nfl", "player_sacks_over_under")
-    nflList = populateBets(nflList, "nfl", "player_tackles_and_assists_over_under")
-    nflList = populateBets(nflList, "nfl", "player_tackles_over_under")
+#read from base and calculate hit rates
+def hitRateNBA():
 
-    nflList = scrapeGamelog(nflList)
-    nflList = calcHitRate(nflList)
-    nflList.sort_by_hit_percentage()
+    nbaList = hitRateList() #begin instance of class
+    spreadsheet = openSpreadsheet() #open the spreadsheeet
 
-    nflList.print_to_excel(nflHitRateSheet)
+    #open sheet to read from
+    baseSheet = spreadsheet.worksheet('BaseNBA')
+    nbaList.loadBase(baseSheet)
+
+    nbaList = scrapeGamelog(nbaList)
+    nbaList = calcHitRate(nbaList)
+    nbaList.sort_by_hit_percentage()
+
+    nbaList.delete_zeros()
+
+    #Open and print to sheet
+    nbaSheet = spreadsheet.worksheet('NBAHitRate')
+    nbaList.print_to_excel(nbaSheet)
 
 
-#updates the main
+#updates the list on excel
 if __name__ == "__main__":
     
-    updateNFL()
-    updateNHL()
+    updateBaseNBA()
+    updateBaseNHL()
+    hitRateNBA()
+    hitRateNHL()
