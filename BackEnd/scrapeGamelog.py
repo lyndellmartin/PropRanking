@@ -1,4 +1,4 @@
-from PlayerList import PlayerList, Player
+from PlayerList import hitRate, hitRateList
 import pandas as pd
 import requests
 import math
@@ -16,12 +16,12 @@ def flattenFrame(statTable):
 
 
 #saves a panda table to each of the players
-def scrapeGamelog(playerList):
+def scrapeGamelog(hitRateList):
 
     counter = 0
 
     pattern = re.compile('[^a-zA-Z ]')
-    for player in playerList.players:
+    for player in hitRateList.players:
         if player.name == "Jarrett Allen":
             print("here")
 
@@ -29,7 +29,9 @@ def scrapeGamelog(playerList):
         names = player.name.split()
         cleansed_names = []
         cleansed_names2 = []
-        
+    
+
+        #Special cases for names
         # Process names containing hyphens
         for part in names:
             if '-' in part:
@@ -94,13 +96,13 @@ def scrapeGamelog(playerList):
 
         counter += 1
 
-    return playerList
+    return hitRateList
 
 
 
 
 #uses the dataframes saved to each player to calculate
-def calcHitRate(playerList):
+def calcHitRate(hitRateList):
 
     #map in which keys represent name of stat, and values represent headers of each gamelog dataframe column
     statMap = {
@@ -135,9 +137,7 @@ def calcHitRate(playerList):
         'Ast Tackles' : 'Defense_assist',
     }
 
-    for player in playerList.players:
-        if player.name == "Jarrett Allen":
-            print("here")
+    for player in hitRateList.players:
 
         #replace stat names from player_props with stat names from fantasy pros
         mapped_stats = []
@@ -204,8 +204,8 @@ def calcHitRate(playerList):
            
         else: #column not found in dataframe
             print(f"{player.name} ignored due to website behavior")
-            playerList.remove_player(player.name) #if it does not contain desired stat meaning incorrect table pulled in the case of website behavior
+            hitRateList.remove_player(player.name) #if it does not contain desired stat meaning incorrect table pulled in the case of website behavior
 
-    playerList.calculate_hit_percentages()
+    hitRateList.calculate_hit_percentages()
 
-    return playerList
+    return hitRateList

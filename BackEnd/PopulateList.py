@@ -5,6 +5,8 @@ from datetime import datetime
 import time
 import math
 
+
+#Pulling from PropOdds API
 BASE_URL = 'https://api.prop-odds.com'
 API_KEY = '6dvBiRWWH6aBNjkeG8W89ir3KeihIeyY'
 
