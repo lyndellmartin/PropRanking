@@ -1,0 +1,49 @@
+body {
+  background: top center fixed rgb(255, 255, 255);
+  background-repeat: repeat;
+  font-family: Georgia, serif;
+  font-size: 15px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+#banner {
+  height: 75px;
+  width: 100%;
+  background-color: rgb(40, 40, 40);
+  text-align: center;
+  font-family: "Racing Sans One", serif;
+  font-size: 28px;
+  color: white;
+}
+
+#hero {
+  text-align: center;
+  height: 500px;
+  width: 100%;
+  display: grid;
+  align-items: center;
+  font-size: 80px;
+}
+
+#generate_button {
+  /* background-color: #7ad7ff; */
+  background-color: #52cafe;
+  border: none;
+  color: white;
+  text-align: center;
+  font-size: 40px;
+  border-radius: 12px;
+  padding: 12px 12px;
+  opacity: 0.7;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#generate_button:hover {
+  opacity: 1;
+}
+
+#generate_button:active {
+  cursor: default;
+}
