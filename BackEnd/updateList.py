@@ -104,6 +104,7 @@ def hitRateNBA():
 #updates the list on excel
 if __name__ == "__main__":
     
-
+    updateBaseNBA()
+    updateBaseNHL()
     hitRateNBA()
     hitRateNHL()
