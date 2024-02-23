@@ -3,13 +3,11 @@ import openpyxl
 
 #for printing to the base sheet
 class Player:
-    def __init__(self, name, stat, projection, sport, dataframe=None):
+    def __init__(self, name, stat, projection, sport):
         self.name = name
         self.stat = stat
         self.projection = projection
         self.sport = sport
-        #data fram imported from recent games
-        self.statTable = dataframe if dataframe is not None else pd.DataFrame()
 
 #for all instances of players
 class PlayerList:
@@ -69,6 +67,105 @@ class PlayerList:
 
         # Update the worksheet with the transposed data starting from cell A1
         worksheet.update('A2', data_transposed)
+
+
+#used to check if the last ranking was successful
+class pastPlayer():
+    def __init__(self, name, stat, projection, sport, rank, dataframe=None):
+        self.name = name
+        self.stat = stat
+        self.projection = projection
+        self.sport = sport #need to access scrapeGamelog
+        #data fram imported from recent games
+        self.statTable = dataframe if dataframe is not None else pd.DataFrame()
+
+        #correlation data
+        self.rank = 0
+        self.hitBool = False
+
+
+class pastPlayerList():
+    def __init__(self):
+        self.players = [] #initialize empty list for players
+
+    def clear_list(self):
+        # Clear the contents of the player list
+        self.players = []
+    
+    def add_player(self, player):
+        self.players.append(player)
+
+    def remove_player(self, player_name):
+        for player in self.players:
+            if player.name == player_name:
+                self.players.remove(player)
+                return
+    
+    def get_player_by_name(self, player_name):
+        for player in self.players:
+            if player.name == player_name:
+                return player
+        return None
+
+
+    def print_to_excel(self, worksheet): #print to see a general overview of correlation
+        # Clear the existing content in the worksheet
+        worksheet.clear()
+
+        # Initialize lists for each attribute
+        names = []
+        stats = []
+        projections = []
+
+        rank = []
+        hitBool = []
+
+        # Extract data from Player objects
+        for player in self.players:
+            names.append(player.name)
+            stats.append(', '.join(str(stat) for stat in player.stat))
+            projections.append(player.projection)
+
+            rank.append(player.rank)
+            hitBool.append(player.hitBool)
+
+        # Prepare the transposed data
+        data_transposed = [names, stats, projections, rank, hitBool]
+
+        # Transpose the data to organize it by columns
+        data_transposed = list(map(list, zip(*data_transposed)))
+
+        header_list = ["Name", "Stat", "Projection", "Rank", "Hit?"]
+        worksheet.update('A1', [header_list])
+
+        # Update the worksheet with the transposed data starting from cell A1
+        worksheet.update('A2', data_transposed)
+
+
+    def load_data(self, worksheet):
+        # Extract all records from the worksheet
+        records = worksheet.get_all_records()
+
+        # Convert records to a pandas DataFrame
+        df = pd.DataFrame(records)
+
+        # Clear the current list
+        self.clear_list()
+
+        # Iterate over the rows in the DataFrame
+        for index, row in df.iterrows():
+            # Create a new Player object with the data from the row
+            name = row['Name']
+            stat = row['Stat'].split(', ')
+            projection = row['Projection']
+            sport = row['Sport']
+            rank = row['Rank']
+
+            player = pastPlayer(name, stat, projection, sport, rank)
+
+            # Add the player to the player list
+            self.add_player(player)
+        
     
 
 #hit rate information
@@ -85,6 +182,9 @@ class hitRate(Player):
         self.hitRate = 0
         self.hits = 0
         self.attempts = 0
+
+        #correlation data
+        self.rank = 0
 
 
 class hitRateList():
@@ -129,6 +229,12 @@ class hitRateList():
 
     def sort_by_hit_percentage(self):
         self.players.sort(key=lambda player: player.hitRate, reverse = True)
+
+    def rank(self): #add a ranking to calculate correlation
+        counter = 1
+        for player in self.players:
+            player.rank = counter
+            counter += 1
  
     def print_to_excel(self, worksheet):
         # Clear the existing content in the worksheet
@@ -141,6 +247,7 @@ class hitRateList():
         hit_rates = []
         hits = []
         attempts = []
+        rank = []
 
         # Extract data from Player objects
         for hitRate in self.players:
@@ -150,14 +257,15 @@ class hitRateList():
             hit_rates.append(f"{hitRate.hitRate:.2%}")
             hits.append(hitRate.hits)
             attempts.append(hitRate.attempts)
+            rank.append(hitRate.rank)
 
         # Prepare the transposed data
-        data_transposed = [names, stats, projections, hit_rates, hits, attempts]
+        data_transposed = [names, stats, projections, hit_rates, hits, attempts, rank]
 
         # Transpose the data to organize it by columns
         data_transposed = list(map(list, zip(*data_transposed)))
 
-        header_list = ["Name", "Stat", "Projection", "Hit Rate", "Hits", "Attempts"]
+        header_list = ["Name", "Stat", "Projection", "Hit Rate", "Hits", "Attempts", "Rank"]
         worksheet.update('A1', [header_list])
 
         # Update the worksheet with the transposed data starting from cell A1

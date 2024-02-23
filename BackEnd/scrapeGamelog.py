@@ -22,8 +22,6 @@ def scrapeGamelog(hitRateList):
 
     pattern = re.compile('[^a-zA-Z ]')
     for player in hitRateList.players:
-        if player.name == "Jarrett Allen":
-            print("here")
 
         #prepare URL
         names = player.name.split()

@@ -73,6 +73,7 @@ def hitRateNHL():
     nhlList.sort_by_hit_percentage()
 
     nhlList.delete_zeros()
+    nhlList.rank()
 
     #Open and print to sheet
     nhlSheet = spreadsheet.worksheet('NHLHitRate')
@@ -93,6 +94,7 @@ def hitRateNBA():
     nbaList.sort_by_hit_percentage()
 
     nbaList.delete_zeros()
+    nbaList.rank()
 
     #Open and print to sheet
     nbaSheet = spreadsheet.worksheet('NBAHitRate')
@@ -102,7 +104,6 @@ def hitRateNBA():
 #updates the list on excel
 if __name__ == "__main__":
     
-    updateBaseNBA()
-    updateBaseNHL()
+
     hitRateNBA()
     hitRateNHL()
