@@ -207,3 +207,78 @@ def calcHitRate(hitRateList):
     hitRateList.calculate_hit_percentages()
 
     return hitRateList
+
+
+#calculates the average and ratio of projection to avg
+def calc_avg(avgPlayerList):
+
+    #map in which keys represent name of stat, and values represent headers of each gamelog dataframe column
+    statMap = {
+        #basketball
+        "Pts" : "PTS",
+        "Ast" : "AST",
+        "Reb" : "REB",
+        "Stl" : "STL",
+        "Blk" : "BLK",
+        "3PM" : "3PM",
+        "TO" : "TO"
+    }
+    
+    for player in avgPlayerList.players:
+
+        #replace stat names from player_props with stat names from fantasy pros
+        mapped_stats = []
+        if isinstance(player.stat, str):  # Check if player.stat is a string
+            if player.stat in statMap:
+                mapped_stats.append(statMap[player.stat])
+            else:
+                mapped_stats.append(player.stat)
+        else:  # Assuming player.stat is a list of strings
+            for stat in player.stat:
+                if stat in statMap:
+                    mapped_stats.append(statMap[stat])
+                else:
+                    mapped_stats.append(stat)
+
+        if mapped_stats[0] in player.statTable.columns:
+
+            for stat in mapped_stats:
+
+                # Filter out rows with non-numeric values in stat column
+                filtered_statTable = player.statTable[pd.notnull(player.statTable[stat])]
+                # Convert 'stat' column to numeric, coercing non-convertible values to NaN
+                filtered_statTable[stat] = pd.to_numeric(filtered_statTable[stat], errors='coerce')
+            
+            total_sum = 0
+            game_counter = 0
+            # Iterate through each row (game) in the DataFrame
+            for index, row in player.statTable.iterrows():
+                # Initialize sum for the current game
+                game_sum = 0
+
+                # Iterate through each stat in the stats_to_extract list
+                # Iterate through each stat in the stats_to_extract list
+                for stat in mapped_stats:
+                    # Check if the value is numeric (int or float) before adding
+                    if isinstance(row[stat], (int, float)):
+                        game_sum += row[stat]
+                    else:
+                        # Handle non-numeric values (e.g., strings) if present
+                        # You might want to convert them to numeric type before adding
+                        try:
+                            numeric_value = float(row[stat])  # Convert string to float
+                            game_sum += numeric_value
+                        except ValueError:
+                            print(f"Non-numeric value '{row[stat]}' found in column '{stat}'")
+                total_sum += game_sum
+                game_counter += 1
+
+            player.average = total_sum / game_counter
+
+            player.avg_proj_ratio = player.average / player.projection
+           
+        else: #column not found in dataframe
+            print(f"{player.name} ignored due to website behavior")
+            avgPlayerList.remove_player(player.name) #if it does not contain desired stat meaning incorrect table pulled in the case of website behavior
+
+    return avgPlayerList

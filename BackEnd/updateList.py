@@ -1,7 +1,7 @@
-from PlayerList import PlayerList, Player, hitRateList, hitRate
+from PlayerList import PlayerList, Player, hitRateList, hitRate, avgPlayerList
 from PopulateList import populateBets
 from scrapeGamelog import scrapeGamelog
-from scrapeGamelog import calcHitRate
+from scrapeGamelog import calcHitRate, calc_avg
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
@@ -100,11 +100,32 @@ def hitRateNBA():
     nbaSheet = spreadsheet.worksheet('NBAHitRate')
     nbaList.print_to_excel(nbaSheet)
 
+def avgNBA():
+
+    nbaList = avgPlayerList() #begin instance of class
+    spreadsheet = openSpreadsheet() #open the spreadsheeet
+
+    #open sheet to read from
+    baseSheet = spreadsheet.worksheet('BaseNBA')
+    nbaList.loadBase(baseSheet)
+
+    nbaList = scrapeGamelog(nbaList)
+    nbaList = calc_avg(nbaList)
+    nbaList.sort_ratio()
+
+    nbaList.rank()
+
+    #Open and print to sheet
+    nbaSheet = spreadsheet.worksheet('NBAAvg')
+    nbaList.print_to_excel(nbaSheet)
 
 #updates the list on excel
 if __name__ == "__main__":
     
-    updateBaseNBA()
-    updateBaseNHL()
-    hitRateNBA()
-    hitRateNHL()
+    #updateBaseNBA()
+    #updateBaseNHL()
+    #hitRateNBA()
+    #hitRateNHL()
+
+    
+    avgNBA()
