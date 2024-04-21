@@ -4,33 +4,31 @@ from oauth2client.service_account import ServiceAccountCredentials
 from updateList import openSpreadsheet
 
 #read the necessary information to record to the database
-spreadsheet = openSpreadsheet()
-prevList = spreadsheet.worksheet('prevNBAHitRate')
-
 nbaList = pastPlayerList() #create list
+spreadsheet = openSpreadsheet() #open the spreadsheeet
+
+prevList = spreadsheet.worksheet('prevNBAHitRate')
 nbaList.load_prev_data(prevList, 'nba') #read from previous list and add it to the back of the existing list
 
-conn = sqlite3.connect('Database/ranking.db')
+# Connect to the SQLite database
+conn = sqlite3.connect('ranking.db')
+c = conn.cursor()
 
-cursor = conn.cursor()
+    # Create a table to store player data
+c.execute('''CREATE TABLE IF NOT EXISTS players
+                (name TEXT, stat TEXT, projection REAL, rank INTEGER, hit INTEGER, sport TEXT)''')
 
-# Create a new table
-cursor.execute('''
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY,
-        name TEXT,
-        age INTEGER
-    )
-''')
+    # Iterate over the list of pastPlayer objects
+for player in nbaList.players:
+    # Extract data from the pastPlayer object
+    name = player.name
+    stat = ','.join(player.stat)
+    projection = player.projection
+    rank = player.rank
+    hit = player.hit
 
-# Insert some data into the table
-cursor.execute('''
-    INSERT INTO users (name, age) VALUES (?, ?)
-''', ('Alice', 30))
-
-cursor.execute('''
-    INSERT INTO users (name, age) VALUES (?, ?)
-''', ('Bob', 25))
+    # Insert the player data into the database
+    c.execute("INSERT INTO players VALUES (?, ?, ?, ?, ?, ?)", (name, stat, projection, rank, hit))
 
 conn.commit()
 
