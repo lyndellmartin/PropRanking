@@ -25,7 +25,7 @@ jobs:
 
       - name: Install required Python modules
         run: |
-          pip install gspread oauth2client pandas openpyxl beautifulsoup4 lxml
+          pip install gspread oauth2client pandas openpyxl beautifulsoup4 lxml scipy
 
       - name: Run Main Function in BackEnd directory
         run: |
@@ -45,7 +45,7 @@ jobs:
 
       - name: Install required Python modules
         run: |
-          pip install gspread oauth2client pandas openpyxl beautifulsoup4 lxml
+          pip install gspread oauth2client pandas openpyxl beautifulsoup4 lxml scipy
 
       - name: Run Database
         run: |
