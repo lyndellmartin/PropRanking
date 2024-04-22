@@ -259,6 +259,7 @@ class avgPlayerList(PlayerList):
 class pastPlayerList(PlayerList):
 
     def __init__(self):
+        self.players = []
         self.correlation = 0
         self.p_value = 0
 
